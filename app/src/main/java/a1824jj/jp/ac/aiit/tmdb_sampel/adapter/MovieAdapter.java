@@ -5,30 +5,25 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 import a1824jj.jp.ac.aiit.tmdb_sampel.R;
 import a1824jj.jp.ac.aiit.tmdb_sampel.databinding.MovieListItemBinding;
-import a1824jj.jp.ac.aiit.tmdb_sampel.databinding.MovieListItemBindingImpl;
 import a1824jj.jp.ac.aiit.tmdb_sampel.model.Movie;
 import a1824jj.jp.ac.aiit.tmdb_sampel.view.MovieActivity;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+public class MovieAdapter extends PagedListAdapter<Movie, MovieAdapter.MovieViewHolder> {
 
     private Context context;
-    private ArrayList<Movie> movieArrayList;
 
-    public MovieAdapter(Context context, ArrayList<Movie> movieArrayList) {
+    public MovieAdapter(Context context) {
+        super(Movie.CALLBACK);
         this.context = context;
-        this.movieArrayList = movieArrayList;
     }
 
     @NonNull
@@ -48,14 +43,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
 
-        Movie movie = movieArrayList.get(position);
+        Movie movie = getItem(position);
 
         holder.movieListItemBinding.setMovie(movie);
-    }
-
-    @Override
-    public int getItemCount() {
-        return movieArrayList.size();
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -70,7 +60,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if(position != RecyclerView.NO_POSITION){
-                        Movie selectedMovie = movieArrayList.get(position);
+                        Movie selectedMovie = getItem(position);
 
                         Intent intent = new Intent(context, MovieActivity.class);
                         intent.putExtra("movie", selectedMovie);

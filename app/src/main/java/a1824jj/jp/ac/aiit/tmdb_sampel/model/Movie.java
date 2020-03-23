@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -12,10 +11,12 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import a1824jj.jp.ac.aiit.tmdb_sampel.R;
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.library.baseAdapters.BR;
+import androidx.recyclerview.widget.DiffUtil;
 
 public class Movie extends BaseObservable implements Parcelable{
 
@@ -268,5 +269,17 @@ public class Movie extends BaseObservable implements Parcelable{
     public int describeContents() {
         return 0;
     }
+
+    public static final DiffUtil.ItemCallback<Movie> CALLBACK = new DiffUtil.ItemCallback<Movie>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Movie oldItem, @NonNull Movie newItem) {
+            return oldItem.id == newItem.id;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Movie oldItem, @NonNull Movie newItem) {
+            return true;
+        }
+    };
 
 }

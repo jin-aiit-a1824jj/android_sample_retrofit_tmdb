@@ -4,31 +4,23 @@ import a1824jj.jp.ac.aiit.tmdb_sampel.R;
 import a1824jj.jp.ac.aiit.tmdb_sampel.adapter.MovieAdapter;
 import a1824jj.jp.ac.aiit.tmdb_sampel.databinding.ActivityMainBinding;
 import a1824jj.jp.ac.aiit.tmdb_sampel.model.Movie;
-import a1824jj.jp.ac.aiit.tmdb_sampel.model.MovieDBResponse;
-import a1824jj.jp.ac.aiit.tmdb_sampel.service.MovieDataService;
-import a1824jj.jp.ac.aiit.tmdb_sampel.service.RetrofitInstance;
 import a1824jj.jp.ac.aiit.tmdb_sampel.viewmodel.MainActivityViewModel;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<Movie> movies;
+    private PagedList<Movie> movies;
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -62,10 +54,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getPopularMovies(){
-         mainActivityViewModel.getAllMovie().observe(this, new Observer<List<Movie>>() {
+        mainActivityViewModel.getMoviesPagedList().observe(this, new Observer<PagedList<Movie>>() {
             @Override
-            public void onChanged(List<Movie> moviesFromLiveData) {
-                movies = (ArrayList<Movie>) moviesFromLiveData;
+            public void onChanged(PagedList<Movie> moviesFromLiveData) {
+                movies = moviesFromLiveData;
                 showOnRecyclerView();
             }
         });
@@ -73,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void showOnRecyclerView() {
         recyclerView = activityMainBinding.rvMovies;
-        movieAdapter = new MovieAdapter(this, this.movies);
+        movieAdapter = new MovieAdapter(this);
+        movieAdapter.submitList(movies);
 
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
