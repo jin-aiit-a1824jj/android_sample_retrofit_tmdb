@@ -13,9 +13,12 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import a1824jj.jp.ac.aiit.tmdb_sampel.R;
+import a1824jj.jp.ac.aiit.tmdb_sampel.databinding.MovieListItemBinding;
+import a1824jj.jp.ac.aiit.tmdb_sampel.databinding.MovieListItemBindingImpl;
 import a1824jj.jp.ac.aiit.tmdb_sampel.model.Movie;
 import a1824jj.jp.ac.aiit.tmdb_sampel.view.MovieActivity;
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
@@ -31,21 +34,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_list_item, parent, false);
-        return new MovieViewHolder(view);
+
+        MovieListItemBinding movieListItemBinding
+                = DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        R.layout.movie_list_item,
+                        parent,
+                false);
+
+        return new MovieViewHolder(movieListItemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        holder.movieTitle.setText(movieArrayList.get(position).getTitle());
-        holder.rate.setText(Double.toString(movieArrayList.get(position).getVoteAverage()));
 
-        String imagePath = "https://image.tmdb.org/t/p/w500" + movieArrayList.get(position).getPosterPath();
+        Movie movie = movieArrayList.get(position);
 
-        Glide.with(context)
-                .load(imagePath)
-                .placeholder(R.drawable.loading)
-                .into(holder.movieImage);
+        holder.movieListItemBinding.setMovie(movie);
     }
 
     @Override
@@ -55,16 +60,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     public class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView movieTitle, rate;
-        public ImageView movieImage;
+        private MovieListItemBinding movieListItemBinding;
 
-        public MovieViewHolder(@NonNull View itemView) {
-            super(itemView);
-            movieImage = itemView.findViewById(R.id.ivMovie);
-            rate = itemView.findViewById(R.id.tvRating);
-            movieTitle = itemView.findViewById(R.id.tvTitle);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
+        public MovieViewHolder(@NonNull MovieListItemBinding movieListItemBinding) {
+            super(movieListItemBinding.getRoot());
+            this.movieListItemBinding = movieListItemBinding;
+            movieListItemBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();

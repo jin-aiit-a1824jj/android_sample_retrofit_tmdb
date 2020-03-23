@@ -2,12 +2,14 @@ package a1824jj.jp.ac.aiit.tmdb_sampel.view;
 
 import a1824jj.jp.ac.aiit.tmdb_sampel.R;
 import a1824jj.jp.ac.aiit.tmdb_sampel.adapter.MovieAdapter;
+import a1824jj.jp.ac.aiit.tmdb_sampel.databinding.ActivityMainBinding;
 import a1824jj.jp.ac.aiit.tmdb_sampel.model.Movie;
 import a1824jj.jp.ac.aiit.tmdb_sampel.model.MovieDBResponse;
 import a1824jj.jp.ac.aiit.tmdb_sampel.service.MovieDataService;
 import a1824jj.jp.ac.aiit.tmdb_sampel.service.RetrofitInstance;
 import a1824jj.jp.ac.aiit.tmdb_sampel.viewmodel.MainActivityViewModel;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MainActivityViewModel mainActivityViewModel;
+    private ActivityMainBinding activityMainBinding;
 
     public static final String API_KEY = "API_KEY";
 
@@ -41,11 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("TMDB Popular Movies Today");
 
+
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
         mainActivityViewModel =  new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         getPopularMovies();
 
-        swipeRefreshLayout = findViewById(R.id.swipe_layout);
+        swipeRefreshLayout = activityMainBinding.swipeLayout;
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -66,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showOnRecyclerView() {
-        recyclerView = findViewById(R.id.rvMovies);
+        recyclerView = activityMainBinding.rvMovies;
         movieAdapter = new MovieAdapter(this, this.movies);
 
         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){

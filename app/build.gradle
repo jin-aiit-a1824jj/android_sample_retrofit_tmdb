@@ -3,6 +3,9 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
 
+    dataBinding{
+        enabled = true
+    }
 
     defaultConfig {
         applicationId "a1824jj.jp.ac.aiit.tmdb_sampel"

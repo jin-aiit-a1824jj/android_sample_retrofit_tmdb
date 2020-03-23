@@ -5,10 +5,19 @@ import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Movie implements Parcelable{
+import a1824jj.jp.ac.aiit.tmdb_sampel.R;
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
+import androidx.databinding.library.baseAdapters.BR;
+
+public class Movie extends BaseObservable implements Parcelable{
 
     @SerializedName("vote_count")
     @Expose
@@ -31,6 +40,18 @@ public class Movie implements Parcelable{
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
+
+    @BindingAdapter({"posterPath"})
+    public static void loadImage(ImageView imageView, String imageURL){
+
+        String imagePath = "https://image.tmdb.org/t/p/w500" + imageURL;
+
+        Glide.with(imageView.getContext())
+                .load(imagePath)
+                .placeholder(R.drawable.loading)
+                .into(imageView);
+    }
+
     @SerializedName("original_language")
     @Expose
     private String originalLanguage;
@@ -66,8 +87,7 @@ public class Movie implements Parcelable{
             return (new Movie[size]);
         }
 
-    }
-            ;
+    };
 
     protected Movie(Parcel in) {
         this.voteCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -89,6 +109,7 @@ public class Movie implements Parcelable{
     public Movie() {
     }
 
+    @Bindable
     public Integer getVoteCount() {
         return voteCount;
     }
@@ -97,108 +118,134 @@ public class Movie implements Parcelable{
         this.voteCount = voteCount;
     }
 
+    @Bindable
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+        notifyPropertyChanged(BR.id);
     }
 
+    @Bindable
     public Boolean getVideo() {
         return video;
     }
 
     public void setVideo(Boolean video) {
         this.video = video;
+        notifyPropertyChanged(BR.video);
     }
 
+    @Bindable
     public Double getVoteAverage() {
         return voteAverage;
     }
 
     public void setVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
+        notifyPropertyChanged(BR.voteAverage);
     }
 
+    @Bindable
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+        notifyPropertyChanged(BR.title);
     }
 
+    @Bindable
     public Double getPopularity() {
         return popularity;
     }
 
     public void setPopularity(Double popularity) {
         this.popularity = popularity;
+        notifyPropertyChanged(BR.popularity);
     }
 
+    @Bindable
     public String getPosterPath() {
         return posterPath;
     }
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
+        notifyPropertyChanged(BR.posterPath);
     }
 
+    @Bindable
     public String getOriginalLanguage() {
         return originalLanguage;
     }
 
     public void setOriginalLanguage(String originalLanguage) {
         this.originalLanguage = originalLanguage;
+        notifyPropertyChanged(BR.originalLanguage);
     }
 
+    @Bindable
     public String getOriginalTitle() {
         return originalTitle;
     }
 
     public void setOriginalTitle(String originalTitle) {
         this.originalTitle = originalTitle;
+        notifyPropertyChanged(BR.originalTitle);
     }
 
+    @Bindable
     public List<Integer> getGenreIds() {
         return genreIds;
     }
 
     public void setGenreIds(List<Integer> genreIds) {
         this.genreIds = genreIds;
+        notifyPropertyChanged(BR.genreIds);
     }
 
+    @Bindable
     public String getBackdropPath() {
         return backdropPath;
     }
 
     public void setBackdropPath(String backdropPath) {
         this.backdropPath = backdropPath;
+        notifyPropertyChanged(BR.backdropPath);
     }
 
+    @Bindable
     public Boolean getAdult() {
         return adult;
     }
 
     public void setAdult(Boolean adult) {
         this.adult = adult;
+        notifyPropertyChanged(BR.adult);
     }
 
+    @Bindable
     public String getOverview() {
         return overview;
     }
 
     public void setOverview(String overview) {
         this.overview = overview;
+        notifyPropertyChanged(BR.overview);
     }
 
+    @Bindable
     public String getReleaseDate() {
         return releaseDate;
     }
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+        notifyPropertyChanged(BR.releaseDate);
     }
 
     public void writeToParcel(Parcel dest, int flags) {
