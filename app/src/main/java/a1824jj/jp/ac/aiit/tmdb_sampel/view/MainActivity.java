@@ -6,7 +6,10 @@ import a1824jj.jp.ac.aiit.tmdb_sampel.model.Movie;
 import a1824jj.jp.ac.aiit.tmdb_sampel.model.MovieDBResponse;
 import a1824jj.jp.ac.aiit.tmdb_sampel.service.MovieDataService;
 import a1824jj.jp.ac.aiit.tmdb_sampel.service.RetrofitInstance;
+import a1824jj.jp.ac.aiit.tmdb_sampel.viewmodel.MainActivityViewModel;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +22,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private MainActivityViewModel mainActivityViewModel;
+
+    public static final String API_KEY = "API_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setTitle("TMDB Popular Movies Today");
+
+        mainActivityViewModel =  new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         getPopularMovies();
 
@@ -47,25 +56,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getPopularMovies(){
-        MovieDataService movieDataService = RetrofitInstance.getService();
-        Call<MovieDBResponse> call = movieDataService.getPopularMovieQuery("apikey");
-        call.enqueue(new Callback<MovieDBResponse>() {
+         mainActivityViewModel.getAllMovie().observe(this, new Observer<List<Movie>>() {
             @Override
-            public void onResponse(Call<MovieDBResponse> call, Response<MovieDBResponse> response) {
-                MovieDBResponse movieDBResponse = response.body();
-
-                if(movieDBResponse != null && movieDBResponse.getMovies() != null){
-                    movies = (ArrayList<Movie>) movieDBResponse.getMovies();
-                    showOnRecyclerView();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieDBResponse> call, Throwable t) {
-
+            public void onChanged(List<Movie> moviesFromLiveData) {
+                movies = (ArrayList<Movie>) moviesFromLiveData;
+                showOnRecyclerView();
             }
         });
-
     }
 
     private void showOnRecyclerView() {
